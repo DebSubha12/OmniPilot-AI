@@ -249,6 +249,79 @@ code {
   margin: 0 auto;
 }
 
+
+.planner-card{
+background:#101827;
+padding:25px;
+border-radius:15px;
+color:#fff;
+margin-top:20px;
+}
+
+.agent-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:18px;
+margin:20px 0;
+}
+
+.agent-card{
+background:#182338;
+padding:20px;
+border-radius:14px;
+text-align:center;
+transition:.3s;
+}
+
+.agent-card:hover{
+transform:translateY(-6px);
+}
+
+.agent-icon{
+font-size:35px;
+margin-bottom:10px;
+}
+
+.badge{
+padding:6px 14px;
+border-radius:30px;
+background:#16a34a;
+color:#fff;
+font-size:13px;
+}
+
+.result-card{
+margin-top:25px;
+background:#0f172a;
+padding:20px;
+border-radius:12px;
+}
+
+.result-table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+.result-table th,
+.result-table td{
+border:1px solid #334155;
+padding:10px;
+text-align:center;
+}
+
+.result-table th{
+background:#1e293b;
+}
+
+.timeline-card,
+.schedule-card{
+background:#1e293b;
+padding:15px;
+border-radius:10px;
+margin:12px 0;
+}
+
 @media (max-width: 640px) {
   .topbar { padding: 14px 18px; }
   .deck { padding: 24px 14px 40px; }

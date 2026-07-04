@@ -143,12 +143,134 @@ document.getElementById("orchestrateForm").addEventListener("submit", async (e) 
 
     pulseAgents(data.data.agentsInvoked || []);
 
-    resultBlock.innerHTML = `
-      <h3>Plan summary</h3>
-      <p>${escapeHtml(data.data.summary)}</p>
-      <p><strong>Agents invoked:</strong> ${data.data.agentsInvoked.map(escapeHtml).join(", ")}</p>
-      <pre>${escapeHtml(JSON.stringify(data.data.results, null, 2))}</pre>
+    const planner = data.data;
+
+let html = `
+<div class="planner-card">
+
+<h2>🧠 Planner Summary</h2>
+<p>${escapeHtml(planner.summary)}</p>
+
+<h3>🤖 Agents Invoked</h3>
+
+<div class="agent-grid">
+`;
+
+(planner.agentsInvoked || []).forEach(agent => {
+
+    html += `
+    <div class="agent-card">
+
+        <h4>${escapeHtml(agent)}</h4>
+
+        <span class="ok-badge">Completed</span>
+
+    </div>
     `;
+
+});
+
+html += `</div>`;
+
+Object.values(planner.results || {}).forEach(result => {
+
+    html += `
+    <div class="result-card">
+
+    <h3>${escapeHtml(result.agent || "Agent")} ${result.success ? "✅" : "❌"}</h3>
+    `;
+
+    if(result.data?.prioritized){
+
+        html += `
+        <table class="result-table">
+
+        <tr>
+
+        <th>Task</th>
+
+        <th>Priority</th>
+
+        <th>Score</th>
+
+        </tr>
+        `;
+
+        result.data.prioritized.forEach(task=>{
+
+            html += `
+            <tr>
+
+            <td>${escapeHtml(task.title)}</td>
+
+            <td>${task.urgency} / ${task.importance}</td>
+
+            <td>${task.score}</td>
+
+            </tr>
+            `;
+
+        });
+
+        html += `</table>`;
+
+    }
+
+    else if(result.data?.plan){
+
+        result.data.plan.forEach(day=>{
+
+            html += `
+            <div class="result-card">
+
+            <b>📅 Day ${day.day}</b>
+
+            <br>
+
+            ${escapeHtml(day.date)}
+
+            <br>
+
+            ${day.focus.map(escapeHtml).join(", ")}
+
+            <br>
+
+            ${day.hours} hrs
+
+            </div>
+            `;
+
+        });
+
+    }
+
+    else if(result.data?.schedule){
+
+        result.data.schedule.forEach(item=>{
+
+            html += `
+            <div class="result-card">
+
+            <b>${escapeHtml(item.start)} - ${escapeHtml(item.end)}</b>
+
+            <br>
+
+            ${escapeHtml(item.title)}
+
+            </div>
+            `;
+
+        });
+
+    }
+
+    html += `</div>`;
+
+});
+
+html += `</div>`;
+
+resultBlock.innerHTML = html;
   } catch (err) {
     resultBlock.innerHTML = `<span class="err">Error: ${escapeHtml(err.message)}</span>`;
   } finally {
