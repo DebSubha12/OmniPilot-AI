@@ -53,6 +53,8 @@ The dashboard includes:
 
 - Node.js
 - Express.js
+  
+<img width="1578" height="733" alt="Image" src="https://github.com/user-attachments/assets/3070512e-6313-4cc8-8cd0-7d49dd4a2dba" />
 
 ## Security
 
@@ -147,6 +149,7 @@ Returns:
 - Eisenhower Matrix category
 
 ---
+<img width="1586" height="720" alt="Image" src="https://github.com/user-attachments/assets/ee681005-b78f-4b6b-b752-e42e84e829f6" />
 
 ## 📚 Exam Study Agent
 
@@ -165,7 +168,7 @@ Output:
 - Revision days
 - Topic distribution
 
----
+<img width="1584" height="737" alt="Image" src="https://github.com/user-attachments/assets/bb965c62-5201-4e83-9292-8c4828ee5da1" />
 
 ## 📅 Life Scheduler Agent
 
