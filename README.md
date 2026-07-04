@@ -1,40 +1,90 @@
 # 🚀 OmniPilot AI
 
-OmniPilot AI is a multi-agent AI dashboard built with **Node.js**, **Express.js**, **HTML**, **CSS**, and **JavaScript**. It demonstrates how multiple AI-inspired agents can collaborate to optimize tasks, create study plans, and manage daily schedules through a unified Planner Agent.
+> **A Secure Multi-Agent AI Dashboard** built with **Node.js, Express.js, HTML, CSS, and Vanilla JavaScript**.
+
+OmniPilot AI is a modular AI-inspired system that demonstrates how multiple intelligent agents collaborate to solve different productivity tasks through a centralized **Planner Agent** using an **MCP-style (Model Context Protocol) architecture**.
+
+The project runs completely **offline**, requires **no external AI API**, and provides both a **modern web dashboard** and a **CLI interface**.
 
 ---
 
-## 📌 Features
+# 📸 Dashboard
 
-- 🧠 Planner Agent (Task Orchestration)
+The dashboard includes:
+
+- 🧠 Planner Console
 - 📋 Task Optimization Agent
 - 📚 Exam Study Planner
+- 📅 Life Scheduler Agent
+- 📊 Mission Control Visualization
+- 📝 Audit Log
+- ❤️ Health Monitoring
+- ⚡ Live MCP Server Status
+
+---
+
+# ✨ Features
+
+- 🧠 Multi-Agent AI Architecture
+- 🎯 Planner (Orchestrator) Agent
+- 📋 Task Optimization Agent
+- 📚 Exam Study Agent
 - 📅 Life Scheduler Agent
 - 🔒 Security Middleware
 - ⚡ Rate Limiting
 - 🌐 REST API
-- 📊 Dashboard Interface
-- 📝 Audit Log
-- ❤️ Health Check API
+- 💻 Command Line Interface (CLI)
+- 📝 Audit Logging
+- ❤️ Health Check Endpoint
+- 📊 Interactive Dashboard
+- 🛡 Input Validation & Safe Execution
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠 Tech Stack
 
-### Frontend
+## Frontend
+
 - HTML5
 - CSS3
-- JavaScript (Vanilla)
+- Vanilla JavaScript
 
-### Backend
+## Backend
+
 - Node.js
 - Express.js
 
-### Security
+## Security
+
 - CORS
-- Rate Limiter
+- Content Security Policy
+- Rate Limiting
+- JSON Validation
 - Security Headers
 - Environment Variables (.env)
+
+---
+
+# 🧩 System Architecture
+
+```
+                    Planner Agent
+                  (Orchestrator)
+                        │
+     ┌──────────────────┼──────────────────┐
+     │                  │                  │
+     ▼                  ▼                  ▼
+Task Optimization   Exam Study      Life Scheduler
+      Agent            Agent             Agent
+            │
+            ▼
+       MCP Server
+   (Validation + Security)
+            │
+      Express REST API
+            │
+     Web Dashboard / CLI
+```
 
 ---
 
@@ -45,76 +95,114 @@ omnipilot-ai/
 │
 ├── public/
 │   ├── index.html
-│   ├── app.js
 │   ├── styles.css
+│   └── app.js
 │
 ├── server/
 │   ├── index.js
-│   ├── mcp/
+│   └── mcp/
+│       ├── agents/
+│       ├── security/
+│       ├── skills/
+│       └── mcpServer.js
 │
 ├── cli/
+│   └── omnipilot-cli.js
 │
 ├── package.json
 ├── package-lock.json
-├── .env
+├── .env.example
 └── README.md
 ```
 
 ---
 
-# ⚙️ Installation
+# 🤖 Available Agents
 
-Clone the repository
+## 🧠 Planner Agent
 
-```bash
-git clone <repository-url>
-```
+Acts as the central orchestrator.
 
-Go to project directory
+Responsibilities:
 
-```bash
-cd omnipilot-ai
-```
-
-Install dependencies
-
-```bash
-npm install
-```
+- Understands user goals
+- Selects appropriate agents
+- Combines outputs
+- Returns a complete execution plan
 
 ---
 
-# ▶️ Run the Project
+## 📋 Task Optimization Agent
 
-Start the server
+Optimizes tasks using:
 
-```bash
-npm start
-```
+- Urgency
+- Importance
+- Effort Hours
 
-Server will run on
+Returns:
 
-```
-http://localhost:5000
-```
-
----
-
-# 🔧 Environment Variables
-
-Create a `.env` file.
-
-Example:
-
-```env
-PORT=5000
-RATE_LIMIT_PER_MINUTE=60
-ALLOWED_ORIGINS=http://localhost:5000
-```
+- Prioritized task list
+- Scores
+- Eisenhower Matrix category
 
 ---
 
-# 📡 API Endpoints
+## 📚 Exam Study Agent
+
+Creates personalized study plans.
+
+Input:
+
+- Subject
+- Topics
+- Exam Date
+- Study Hours
+
+Output:
+
+- Daily study schedule
+- Revision days
+- Topic distribution
+
+---
+
+## 📅 Life Scheduler Agent
+
+Creates optimized daily schedules.
+
+Input:
+
+- Wake Time
+- Sleep Time
+- Fixed Events
+- Tasks
+
+Output:
+
+- Complete timetable
+- Free time allocation
+- Unscheduled tasks
+
+---
+
+# 🔐 Security Features
+
+Every request passes through multiple security layers.
+
+- Input Validation
+- Data Sanitization
+- Safe Execution Wrapper
+- Request Rate Limiting
+- CORS Protection
+- Security Headers
+- Body Size Limiting
+- Global Error Handling
+- Audit Logging
+
+---
+
+# 📡 REST API
 
 ## Health Check
 
@@ -124,7 +212,7 @@ GET /api/health
 
 ---
 
-## List Available Tools
+## List Available Agents
 
 ```
 GET /api/mcp/tools
@@ -132,7 +220,7 @@ GET /api/mcp/tools
 
 ---
 
-## Call Agent
+## Execute Any Agent
 
 ```
 POST /api/mcp/call
@@ -143,9 +231,7 @@ Example
 ```json
 {
   "tool":"task_optimization_agent",
-  "input":{
-    "tasks":[]
-  }
+  "input":{}
 }
 ```
 
@@ -175,51 +261,81 @@ GET /api/audit-log
 
 ---
 
-# 🤖 Available Agents
+# 💻 CLI Commands
 
-### 📋 Task Optimization Agent
+List available agents
 
-Prioritizes tasks using urgency, importance and effort.
+```bash
+node cli/omnipilot-cli.js list
+```
 
----
+Run Planner
 
-### 📚 Exam Study Agent
+```bash
+node cli/omnipilot-cli.js plan "Prepare for exams"
+```
 
-Creates a personalized study plan.
+Run specific agent
 
----
-
-### 📅 Life Scheduler Agent
-
-Generates an optimized daily schedule.
-
----
-
-### 🧠 Planner Agent
-
-Coordinates all available agents and combines their outputs.
+```bash
+node cli/omnipilot-cli.js call exam_study_agent "{...}"
+```
 
 ---
 
-# 🔐 Security Features
+# ⚙ Installation
 
-- Express Security Headers
-- CORS Protection
-- JSON Body Limit
-- Rate Limiting
-- Global Error Handler
+Clone the repository
+
+```bash
+git clone https://github.com/DebSubha12/OmniPilot-AI.git
+```
+
+Move into the project
+
+```bash
+cd OmniPilot-AI
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Create environment file
+
+```bash
+cp .env.example .env
+```
 
 ---
 
-# 📷 Dashboard
+# ▶ Running the Project
 
-The dashboard provides:
+Start the server
 
-- Planner Console
-- Agent Cards
-- Health Status
-- Audit Logs
-- Interactive Visualization
+```bash
+npm start
+```
+
+Open your browser
+
+```
+http://localhost:5000
+```
+
+---
+
+# 🔧 Environment Variables
+
+Example:
+
+```env
+PORT=5000
+RATE_LIMIT_PER_MINUTE=60
+ALLOWED_ORIGINS=http://localhost:5000
+```
 
 ---
 
@@ -228,23 +344,33 @@ The dashboard provides:
 - OpenAI API Integration
 - Google Gemini Integration
 - Voice Assistant
-- PDF Export
 - User Authentication
-- Database Integration
-- AI Chat Interface
-- Dark/Light Theme
+- MongoDB/MySQL Database
+- Export to PDF
+- Calendar Integration
+- Notification System
 - Responsive Mobile UI
+- Dark / Light Theme
 
 ---
 
 # 👨‍💻 Author
 
-**Subhajit**
+**Subhajit Deb**
+
+GitHub:
+https://github.com/DebSubha12
 
 ---
 
-# 📄 License
+# 📜 License
 
-This project is developed for educational and learning purposes.
+This project is licensed under the **MIT License**.
 
-MIT License
+---
+
+## ⭐ If you like this project
+
+Please consider giving it a ⭐ on GitHub.
+
+It helps others discover the project and supports future development.
