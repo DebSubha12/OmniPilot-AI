@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OmniPilot AI — Mission Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="brand-mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="url(#g1)" stroke-width="2"/>
+      <path d="M20 6 L20 34 M6 20 L34 20" stroke="url(#g1)" stroke-width="1.5" opacity="0.5"/>
+      <circle cx="20" cy="20" r="4.5" fill="url(#g1)"/>
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#3AA6FF"/>
+          <stop offset="100%" stop-color="#FFB454"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="brand-text">
+      <span class="brand-name">OmniPilot <em>AI</em></span>
+      <span class="brand-sub">Multi-Agent Mission Control</span>
+    </div>
+  </div>
+  <div class="topbar-status">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusLabel">Connecting…</span>
+  </div>
+</header>
+
+<main class="deck">
+
+  <!-- Orchestrator console -->
+  <section class="panel console-panel">
+    <div class="panel-head">
+      <h1>Flight Console</h1>
+      <p class="eyebrow">Describe a goal. The Planner Agent routes it to the right specialist agents.</p>
+    </div>
+
+    <form id="orchestrateForm" class="console-form">
+      <input
+        type="text"
+        id="goalInput"
+        placeholder="e.g. Study for my chemistry exam and organize my week"
+        maxlength="500"
+        autocomplete="off"
+        required
+      />
+      <button type="submit" id="orchestrateBtn">Engage Planner</button>
+    </form>
+
+    <!-- Signature orbit visual: Planner in center, 4 agents orbiting -->
+    <div class="orbit-wrap" aria-hidden="true">
+      <svg id="orbitSvg" viewBox="0 0 560 260" width="100%" height="260">
+        <g id="orbitLines" stroke="#3AA6FF" stroke-width="1.2" opacity="0.35" fill="none"></g>
+        <circle cx="280" cy="130" r="30" fill="#141C33" stroke="#3AA6FF" stroke-width="1.5"/>
+        <text x="280" y="126" text-anchor="middle" class="orbit-label-main">Planner</text>
+        <text x="280" y="140" text-anchor="middle" class="orbit-label-sub">Orchestrator</text>
+
+        <g id="agentNode-task_optimization_agent" class="agent-node">
+          <circle cx="90" cy="55" r="24" fill="#141C33" stroke="#FFB454" stroke-width="1.5"/>
+          <text x="90" y="52" text-anchor="middle" class="orbit-label-main small">Task</text>
+          <text x="90" y="63" text-anchor="middle" class="orbit-label-sub">Optimizer</text>
+        </g>
+
+        <g id="agentNode-exam_study_agent" class="agent-node">
+          <circle cx="470" cy="55" r="24" fill="#141C33" stroke="#FFB454" stroke-width="1.5"/>
+          <text x="470" y="52" text-anchor="middle" class="orbit-label-main small">Exam /</text>
+          <text x="470" y="63" text-anchor="middle" class="orbit-label-sub">Study</text>
+        </g>
+
+        <g id="agentNode-life_scheduler_agent" class="agent-node">
+          <circle cx="280" cy="225" r="24" fill="#141C33" stroke="#FFB454" stroke-width="1.5"/>
+          <text x="280" y="222" text-anchor="middle" class="orbit-label-main small">Life</text>
+          <text x="280" y="233" text-anchor="middle" class="orbit-label-sub">Scheduler</text>
+        </g>
+      </svg>
+    </div>
+
+    <div id="orchestrateResult" class="result-block" hidden></div>
+  </section>
+
+  <!-- Agent panels -->
+  <section class="agent-grid">
+
+    <article class="panel agent-card" data-agent="task_optimization_agent">
+      <div class="panel-head">
+        <span class="eyebrow">Agent</span>
+        <h2>Task Optimization</h2>
+        <p class="agent-desc">Scores tasks by urgency &amp; importance (Eisenhower-style) and returns a priority order.</p>
+      </div>
+      <form class="agent-form" data-agent="task_optimization_agent">
+        <label>Tasks (one per line: <code>title, urgency 1-5, importance 1-5, effort hours</code>)</label>
+        <textarea rows="4" name="tasks" placeholder="Finish report, 4, 5, 3&#10;Reply to emails, 2, 2, 0.5">Finish report, 4, 5, 3
+Reply to emails, 2, 2, 0.5
+Plan trip, 1, 3, 2</textarea>
+        <button type="submit">Run Agent</button>
+      </form>
+      <div class="agent-output" hidden></div>
+    </article>
+
+    <article class="panel agent-card" data-agent="exam_study_agent">
+      <div class="panel-head">
+        <span class="eyebrow">Agent</span>
+        <h2>Exam / Study</h2>
+        <p class="agent-desc">Builds a day-by-day study plan and reserves review time before your exam.</p>
+      </div>
+      <form class="agent-form" data-agent="exam_study_agent">
+        <label>Subject</label>
+        <input type="text" name="subject" value="Organic Chemistry" maxlength="120" />
+        <label>Topics (comma separated)</label>
+        <input type="text" name="topics" value="Alkanes, Reaction Mechanisms, Isomerism, Lab Safety" maxlength="400" />
+        <label>Exam date</label>
+        <input type="date" name="examDate" />
+        <label>Hours per day</label>
+        <input type="number" name="hoursPerDay" value="2" min="0.5" max="12" step="0.5" />
+        <button type="submit">Run Agent</button>
+      </form>
+      <div class="agent-output" hidden></div>
+    </article>
+
+    <article class="panel agent-card" data-agent="life_scheduler_agent">
+      <div class="panel-head">
+        <span class="eyebrow">Agent</span>
+        <h2>Life Scheduler</h2>
+        <p class="agent-desc">Fits tasks &amp; study blocks into your free time around fixed commitments.</p>
+      </div>
+      <form class="agent-form" data-agent="life_scheduler_agent">
+        <label>Wake time / Sleep time</label>
+        <div class="row-2">
+          <input type="time" name="wakeTime" value="07:00" />
+          <input type="time" name="sleepTime" value="23:00" />
+        </div>
+        <label>Fixed events (one per line: <code>title, start HH:MM, end HH:MM</code>)</label>
+        <textarea rows="2" name="fixedEvents" placeholder="Class, 09:00, 11:00">Class, 09:00, 11:00
+Gym, 18:00, 19:00</textarea>
+        <label>Items to schedule (one per line: <code>title, hours</code>)</label>
+        <textarea rows="2" name="items" placeholder="Study session, 2">Study session, 2
+Finish report, 1.5</textarea>
+        <button type="submit">Run Agent</button>
+      </form>
+      <div class="agent-output" hidden></div>
+    </article>
+
+    <article class="panel agent-card system-card">
+      <div class="panel-head">
+        <span class="eyebrow">System</span>
+        <h2>MCP Server Status</h2>
+        <p class="agent-desc">Live registry of tools this MCP server exposes, plus the last requests it handled.</p>
+      </div>
+      <div id="toolsList" class="tools-list">Loading tools…</div>
+      <div id="auditLog" class="audit-log"></div>
+    </article>
+
+  </section>
+</main>
+
+<footer class="foot">
+  <span>OmniPilot AI · running locally at <code>localhost:3000</code></span>
+  <span>Secured MCP server · validated input · sandboxed execution</span>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

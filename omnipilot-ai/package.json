@@ -1,0 +1,23 @@
+{
+  "name": "omnipilot-ai",
+  "version": "1.0.0",
+  "description": "OmniPilot AI - Multi-Agent AI system (ADK-style Planner, Task Optimization, Exam/Study, Life Scheduler agents) served over an MCP-style server with security middleware and CLI agent skills.",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "cli": "node cli/omnipilot-cli.js"
+  },
+  "bin": {
+    "omnipilot": "cli/omnipilot-cli.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
